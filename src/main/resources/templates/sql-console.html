@@ -1,0 +1,47 @@
+<!-- src/main/resources/templates/sql-console.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>SQL Console (Read-only)</title>
+    <style>
+        textarea { width: 100%; height: 180px; font-family: monospace; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+        thead { position: sticky; top: 0; background: #f7f7f7; }
+        .meta { color: #666; margin-top: .5rem; }
+        .error { color: #b00020; margin-top: .5rem; }
+    </style>
+</head>
+<body>
+<h2>SQL Console (Read-only)</h2>
+
+<form th:action="@{/admin/sql/execute}" method="post">
+    <textarea name="sql" placeholder="SELECT * FROM my_table LIMIT 100;"></textarea>
+    <div>
+        <button type="submit">Execute</button>
+    </div>
+
+</form>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${notice}" class="meta" th:text="${notice}"></div>
+<div th:if="${rowCount != null}" class="meta" th:text="'Rows: ' + ${rowCount}"></div>
+<pre th:text="${#strings.listJoin(columns, ', ')}"></pre>
+<pre th:text="${rows}"></pre>
+<table th:if="${rows}">
+    <thead>
+    <tr>
+        <th th:each="c : ${columns}" th:text="${c}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${rows}">
+        <td th:each="c : ${columns}" th:text="${r.get(c)}">value</td>
+    </tr>
+    </tbody>
+</table>
+<p th:if="${#lists.isEmpty(rows)}">Keine Daten gefunden.</p>
+
+</body>
+</html>
