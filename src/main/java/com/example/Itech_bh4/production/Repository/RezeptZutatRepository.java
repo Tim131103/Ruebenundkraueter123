@@ -1,8 +1,8 @@
 package com.example.Itech_bh4.production.Repository;
 
-import com.example.Itech_bh4.production.Entity.bestellungZutat;
+import com.example.Itech_bh4.production.Entity.RezeptZutat;
 import com.example.Itech_bh4.production.Entity.IDKlasse.RezeptZutatID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BestellungZutatRepository extends JpaRepository<bestellungZutat, RezeptZutatID> {
+public interface RezeptZutatRepository extends JpaRepository<RezeptZutat, RezeptZutatID> {
 }

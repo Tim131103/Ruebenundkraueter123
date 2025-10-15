@@ -39,11 +39,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -69,7 +65,13 @@
             <artifactId>thymeleaf-spring5</artifactId>
             <version>3.1.2.RELEASE</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.3.3</version> <!-- oder die aktuelle Version -->
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>
