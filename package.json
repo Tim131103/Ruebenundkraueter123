@@ -1,0 +1,19 @@
+{
+  "name": "r-ben-kr-uter",
+  "version": "1.0.0",
+  "description": "Bio-Rezept-Service mit personalisierten Rezept-Boxen",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["bio", "recipes", "food", "organic", "recipe-box"],
+  "author": "Tim Lietzow",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}

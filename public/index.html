@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rüben & Kräuter - Bio-Rezept-Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+        
+        select, input {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+        
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #218838;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .recipe-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-content {
+            padding: 1.5rem;
+        }
+        
+        .recipe-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+        
+        .recipe-description {
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .dietary-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            background-color: #e7f4ea;
+            color: #28a745;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .allergen-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .allergen-tag {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .recipe-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #28a745;
+            border: 2px solid #28a745;
+        }
+        
+        .btn-outline:hover {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .ingredient-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .price {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🥬 Rüben & Kräuter</h1>
+            <p class="subtitle">Bio-Rezept-Service mit personalisierten Rezept-Boxen</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h2 style="margin-bottom: 1rem; color: #28a745;">Rezepte filtern</h2>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="dietaryFilter">Ernährungskategorie</label>
+                    <select id="dietaryFilter" multiple>
+                        <option value="">Alle Kategorien</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="allergenFilter">Allergene ausschließen</label>
+                    <select id="allergenFilter" multiple>
+                        <option value="">Keine Einschränkungen</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="cookingTimeFilter">Max. Zubereitungszeit (Min.)</label>
+                    <input type="number" id="cookingTimeFilter" placeholder="z.B. 30" min="1">
+                </div>
+                <div class="filter-group">
+                    <label for="servingsFilter">Min. Portionen</label>
+                    <input type="number" id="servingsFilter" placeholder="z.B. 2" min="1">
+                </div>
+            </div>
+            <button class="btn" onclick="filterRecipes()">Rezepte filtern</button>
+        </div>
+
+        <!-- Recipes Grid -->
+        <div id="recipesContainer">
+            <div class="loading">Rezepte werden geladen...</div>
+        </div>
+    </div>
+
+    <!-- Recipe Detail Modal -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="recipeDetail"></div>
+        </div>
+    </div>
+
+    <!-- Recipe Box Modal -->
+    <div id="recipeBoxModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBoxModal()">&times;</span>
+            <div id="recipeBoxDetail"></div>
+        </div>
+    </div>
+
+    <script>
+        let allRecipes = [];
+        let dietaryCategories = [];
+        let allergens = [];
+
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadFilterOptions();
+            await loadRecipes();
+        });
+
+        async function loadFilterOptions() {
+            try {
+                // Load dietary categories
+                const dietaryResponse = await fetch('/api/recipes/meta/dietary-categories');
+                const dietaryData = await dietaryResponse.json();
+                if (dietaryData.success) {
+                    dietaryCategories = dietaryData.data;
+                    populateSelect('dietaryFilter', dietaryCategories);
+                }
+
+                // Load allergens
+                const allergenResponse = await fetch('/api/recipes/meta/allergens');
+                const allergenData = await allergenResponse.json();
+                if (allergenData.success) {
+                    allergens = allergenData.data;
+                    populateSelect('allergenFilter', allergens);
+                }
+            } catch (error) {
+                console.error('Fehler beim Laden der Filter-Optionen:', error);
+            }
+        }
+
+        function populateSelect(selectId, options) {
+            const select = document.getElementById(selectId);
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
+            });
+        }
+
+        async function loadRecipes(filters = {}) {
+            try {
+                const queryParams = new URLSearchParams();
+                
+                if (filters.dietaryCategories && filters.dietaryCategories.length > 0) {
+                    filters.dietaryCategories.forEach(cat => queryParams.append('dietaryCategories', cat));
+                }
+                
+                if (filters.excludeAllergens && filters.excludeAllergens.length > 0) {
+                    filters.excludeAllergens.forEach(allergen => queryParams.append('excludeAllergens', allergen));
+                }
+                
+                if (filters.maxCookingTime) {
+                    queryParams.append('maxCookingTime', filters.maxCookingTime);
+                }
+                
+                if (filters.servings) {
+                    queryParams.append('servings', filters.servings);
+                }
+
+                const response = await fetch(`/api/recipes?${queryParams.toString()}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    allRecipes = data.data;
+                    displayRecipes(allRecipes);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById('recipesContainer').innerHTML = 
+                    `<div class="error">Fehler beim Laden der Rezepte: ${error.message}</div>`;
+            }
+        }
+
+        function displayRecipes(recipes) {
+            const container = document.getElementById('recipesContainer');
+            
+            if (recipes.length === 0) {
+                container.innerHTML = '<div class="loading">Keine Rezepte gefunden. Versuchen Sie andere Filter.</div>';
+                return;
+            }
+
+            const recipesHtml = recipes.map(recipe => `
+                <div class="recipe-card">
+                    <div class="recipe-content">
+                        <h3 class="recipe-title">${recipe.name}</h3>
+                        <p class="recipe-description">${recipe.description}</p>
+                        
+                        <div class="recipe-meta">
+                            <span>⏱️ ${recipe.cookingTime} Min.</span>
+                            <span>👥 ${recipe.servings} Portionen</span>
+                        </div>
+                        
+                        <div class="dietary-tags">
+                            ${recipe.dietaryCategories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                        </div>
+                        
+                        ${recipe.allergens.length > 0 ? `
+                            <div class="allergen-tags">
+                                ${recipe.allergens.map(allergen => `<span class="allergen-tag">⚠️ ${allergen}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="recipe-actions">
+                            <button class="btn btn-small" onclick="showRecipeDetail(${recipe.id})">
+                                Details anzeigen
+                            </button>
+                            <button class="btn btn-small btn-outline" onclick="showRecipeBox(${recipe.id})">
+                                🛍️ Rezept-Box
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="recipes-grid">${recipesHtml}</div>`;
+        }
+
+        function filterRecipes() {
+            const filters = {};
+            
+            // Get selected dietary categories
+            const dietarySelect = document.getElementById('dietaryFilter');
+            const selectedDietary = Array.from(dietarySelect.selectedOptions).map(option => option.value).filter(v => v);
+            if (selectedDietary.length > 0) {
+                filters.dietaryCategories = selectedDietary;
+            }
+            
+            // Get selected allergens to exclude
+            const allergenSelect = document.getElementById('allergenFilter');
+            const selectedAllergens = Array.from(allergenSelect.selectedOptions).map(option => option.value).filter(v => v);
+            if (selectedAllergens.length > 0) {
+                filters.excludeAllergens = selectedAllergens;
+            }
+            
+            // Get cooking time filter
+            const cookingTime = document.getElementById('cookingTimeFilter').value;
+            if (cookingTime) {
+                filters.maxCookingTime = parseInt(cookingTime);
+            }
+            
+            // Get servings filter
+            const servings = document.getElementById('servingsFilter').value;
+            if (servings) {
+                filters.servings = parseInt(servings);
+            }
+            
+            loadRecipes(filters);
+        }
+
+        async function showRecipeDetail(recipeId) {
+            try {
+                const response = await fetch(`/api/recipes/${recipeId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const recipe = data.data;
+                    document.getElementById('recipeDetail').innerHTML = `
+                        <h2>${recipe.name}</h2>
+                        <p style="margin-bottom: 1rem; color: #6c757d;">${recipe.description}</p>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>⏱️ Zubereitungszeit:</strong> ${recipe.cookingTime} Minuten<br>
+                            <strong>👥 Portionen:</strong> ${recipe.servings}
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Ernährungskategorien:</strong><br>
+                            ${recipe.dietaryCategories.map(cat => `<span class="tag" style="margin: 0.25rem 0.25rem 0 0;">${cat}</span>`).join('')}
+                        </div>
+                        
+                        ${recipe.allergens.length > 0 ? `
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Allergene:</strong><br>
+                                ${recipe.allergens.map(allergen => `<span class="allergen-tag" style="margin: 0.25rem 0.25rem 0 0;">⚠️ ${allergen}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <h3>Zutaten:</h3>
+                        <ul class="ingredient-list">
+                            ${recipe.ingredients.map(ing => `
+                                <li class="ingredient-item">
+                                    <span>Produkt ID ${ing.productId}</span>
+                                    <span>${ing.quantity} ${ing.unit}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        
+                        <h3>Zubereitung:</h3>
+                        <ol style="margin-left: 1.5rem;">
+                            ${recipe.instructions.map(step => `<li style="margin-bottom: 0.5rem;">${step}</li>`).join('')}
+                        </ol>
+                    `;
+                    
+                    document.getElementById('recipeModal').style.display = 'block';
+                } else {
+                    alert('Fehler beim Laden des Rezepts: ' + data.error);
+                }
+            } catch (error) {
+                alert('Fehler beim Laden des Rezepts: ' + error.message);
+            }
+        }
+
+        async function showRecipeBox(recipeId) {
+            try {
+                const response = await fetch(`/api/recipes/${recipeId}/box`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const box = data.data;
+                    document.getElementById('recipeBoxDetail').innerHTML = `
+                        <h2>🛍️ Rezept-Box: ${box.recipeName}</h2>
+                        <p style="margin-bottom: 1rem; color: #6c757d;">
+                            Alle Zutaten für Ihr Rezept, frisch und in Bio-Qualität zusammengestellt.
+                        </p>
+                        
+                        <h3>Enthaltene Produkte:</h3>
+                        <ul class="ingredient-list">
+                            ${box.products.map(item => `
+                                <li class="ingredient-item">
+                                    <div>
+                                        <strong>${item.product.name}</strong><br>
+                                        <small style="color: #6c757d;">${item.product.category}</small>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <strong>${item.quantity} ${item.unit}</strong><br>
+                                        ${item.product.allergens.length > 0 ? 
+                                            `<small style="color: #856404;">⚠️ ${item.product.allergens.join(', ')}</small>` : 
+                                            '<small style="color: #28a745;">✓ Allergenfrei</small>'
+                                        }
+                                    </div>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #e9ecef;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 1.2rem; font-weight: 600;">Geschätzter Preis:</span>
+                                <span class="price">€${box.totalPrice.toFixed(2)}</span>
+                            </div>
+                            <p style="margin-top: 0.5rem; color: #6c757d; font-size: 0.9rem;">
+                                Erstellt am: ${new Date(box.createdAt).toLocaleDateString('de-DE')}
+                            </p>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" style="width: 100%;" onclick="alert('Bestellfunktion wird implementiert!')">
+                                🛒 Rezept-Box bestellen
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.getElementById('recipeBoxModal').style.display = 'block';
+                } else {
+                    alert('Fehler beim Erstellen der Rezept-Box: ' + data.error);
+                }
+            } catch (error) {
+                alert('Fehler beim Erstellen der Rezept-Box: ' + error.message);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('recipeModal').style.display = 'none';
+        }
+
+        function closeBoxModal() {
+            document.getElementById('recipeBoxModal').style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const recipeModal = document.getElementById('recipeModal');
+            const boxModal = document.getElementById('recipeBoxModal');
+            
+            if (event.target === recipeModal) {
+                recipeModal.style.display = 'none';
+            }
+            if (event.target === boxModal) {
+                boxModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
