@@ -1,0 +1,10 @@
+CREATE USER 'admin'@'%' IDENTIFIED BY 'starkesPasswort1';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
+
+CREATE USER 'editor'@'%' IDENTIFIED BY 'starkesPasswort2';
+GRANT SELECT, INSERT, UPDATE, DELETE ON krautundrueben.* TO 'editor'@'%';
+
+CREATE USER 'reader'@'%' IDENTIFIED BY 'starkesPasswort3';
+GRANT SELECT ON krautundrueben.* TO 'reader'@'%';
+
+FLUSH PRIVILEGES;
