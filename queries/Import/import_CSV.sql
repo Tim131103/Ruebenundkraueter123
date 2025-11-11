@@ -1,3 +1,6 @@
+-- Löschen Sie die Tabelle, wenn sie bereits existiert
+DROP TABLE IF EXISTS Data_dq;
+
 -- Erstellen Sie zuerst die Zieltabelle (passen Sie die Spaltennamen und Typen an!)
 CREATE TABLE Data_dq (
    Spalte1 VARCHAR(100),
