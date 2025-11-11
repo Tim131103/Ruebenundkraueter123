@@ -1,0 +1,9 @@
+CREATE TRIGGER trg_überprüfung_telefon_einzigartig
+BEFORE INSERT ON KUNDE
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM KUNDE WHERE Telefon = NEW.Telefon) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Telefonnummer bereits vorhanden!';
+    END IF;
+END;

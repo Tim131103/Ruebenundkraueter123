@@ -1,0 +1,15 @@
+CREATE PROCEDURE anonymisiere_kundendaten(IN p_Kundennummer INT)
+BEGIN
+    UPDATE KUNDE
+    SET
+        Nachname = NULL,
+        Vorname = NULL,
+        Geburtsdatum = NULL,
+        Strasse = NULL,
+        Hausnr = NULL,
+        PLZ = NULL,
+        Ort = NULL,
+        Telefon = NULL,
+        Email = NULL
+    WHERE Kundennummer = p_Kundennummer;
+END;

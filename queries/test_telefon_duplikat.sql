@@ -1,0 +1,2 @@
+INSERT INTO KUNDE (Nachname, Vorname, Geburtsdatum, Strasse, Hausnr, PLZ, Ort, Telefon, Email) VALUES
+ ('Mustermann', 'Max', '1980-01-01', 'Musterstrasse', '1', '12345', 'Musterstadt', '040/7645123', 'max.mustermann@example.com');
